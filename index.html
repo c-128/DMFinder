@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DMfinder</title>
+  </head>
+  <body>
+    <header>
+      <div class="file">
+        <input type="file" id="package-file" />
+      </div>
+
+      <div class="query">
+        <input class="inputfield" type="text" id="query" placeholder="Keyword"/>
+      </div>
+
+      <div class="button">
+        <button class="button button-primary" id="search">Search</button>
+      </div>
+    </header>
+
+    <main>
+      <article>
+        <h1>Results:</h1>
+        <label>We have found the following users:</label>
+      </article>
+
+      <article>
+        <h1>Privacy:</h1>
+        <p>
+          We know that our discord data packages contain very personal information and that you might be afraid to use this service. <br/>
+          However this website is safe as it does not upload your data to any kind of server in any way.
+          You can use this website without an internet connection if you want to be sure.
+        </p>
+      </article>
+    </main>
+
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+
+  <script>
+    const fileField = document.getElementById("package-file");
+    const queryField = document.getElementById("query");
+    const searchButton = document.getElementById("search");
+
+    searchButton.onclick = () => {
+      searchButton.classList.add("button-disabled");
+      searchButton.innerHTML = "Searching...";
+
+      setTimeout(() => {
+        searchButton.classList.remove("button-disabled");
+        searchButton.innerHTML = "Search";
+
+      }, 2000);
+    };
+  </script>
+</html>

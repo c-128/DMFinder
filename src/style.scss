@@ -1,0 +1,101 @@
+$themePrimary: hsl(235, 85.6%, 64.7%);
+$themeSecondary: hsl(217, 7.6%, 33.5%);
+$themeDanger: #ed4245;
+$themeSuccess: #3ba55d;
+$themeInputField: hsl(216, 7.2%, 13.5%);
+
+$themeBackground: #36393f;
+$themeBackgroundDark: #2f3136;
+$themeText: #c7d3de;
+
+$themButtonText: hsl(0, 0%, 100%);
+$themButtonDisabled: hsl(216, 7.2%, 13.5%);
+
+* {
+  margin: 0;
+  background-color: $themeBackground;
+  color: $themeText;
+  font-family: sans-serif;
+}
+
+.button {
+  color: $themButtonText;
+  justify-content: center;
+  align-items: center;
+  border: none;
+  border-radius: 3px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  padding: 2px 16px;
+  user-select: none;
+  outline: none;
+  cursor: pointer;
+  height: 32px;
+}
+
+.button:hover {
+  transition: background-color .17s ease, color .17s ease;
+}
+
+.button-primary {
+  background-color: $themePrimary;
+}
+
+.button-secondary {
+  background-color: $themeSecondary;
+}
+
+.button-danger {
+  background-color: $themeDanger;
+}
+
+.button-success {
+  background-color: $themeSuccess;
+}
+
+.button-disabled {
+  cursor: not-allowed;
+  background-color: $themButtonDisabled;
+}
+
+.inputfield {
+  font-size: 16px;
+  border-radius: 3px;
+  border: none;
+  background-color: $themeInputField;
+  outline: none;
+  padding: 10px;
+  width: 100%;
+}
+
+
+
+
+header {
+  display: flex;
+  background-color: $themeBackgroundDark;
+  height: 5vh;
+
+  * {
+    background: transparent;
+  }
+
+  .file {
+    width: 20%;
+  }
+
+  .query {
+    width: 70%;
+    height: 100%;
+    margin-right: 2%;
+  }
+
+  .button {
+    height: 100%;
+  }
+}
+
+main {
+  
+}
