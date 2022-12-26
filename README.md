@@ -18,3 +18,4 @@ Don't worry! You can join our support server [here](https://discord.gg/9Q7tFzV6F
 
 ## 💯 Credits
 * `Statera👑` for creating the logo
+* `hacksick` for the original idea
