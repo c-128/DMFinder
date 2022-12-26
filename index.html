@@ -28,13 +28,14 @@
   </header>
 
   <main>
-    <div id="instructions">
+    <div id="faq">
       <h1>❓ How do I use this?</h1>
       <ol>
         <li>
           You firstly need your discord data package. If you already got it, skip to the second step.
           If you do not have it, go to the Privacy & Safety section in the Discord app.
-          Scroll all the way down and request your data package. It usually arrives within 3-7 days, but Discord says it can take upto 30 days.
+          Scroll all the way down and request your data package. It usually arrives within 3-7 days, but Discord says it
+          can take upto 30 days.
         </li>
         <li>
           Now upload package.zip at the top left.
@@ -47,13 +48,15 @@
           Now you should see all the users where you said that keyword.
         </li>
       </ol>
-  
+
       <h1>🔐 How do I ensure that my data is safe?</h1>
       <p>
-        Firstly, once the website is loaded, it can be fully used with your internet connection turned off, ensuring that no data will be sent to a server.
+        Firstly, once the website is loaded, it can be fully used with your internet connection turned off, ensuring
+        that no data will be sent to a server.
         You can even safe the site using your browser (Right click > Save Page as...) and then manually open it.
         Additionally you can also check the source code <a href="https://github.com/c-128/DMFinder">here</a>.
-        If you are still uncertain, feel free to join our support server <a href="https://discord.gg/9Q7tFzV6Fc">here</a> and ask us.
+        If you are still uncertain, feel free to join our support server <a
+          href="https://discord.gg/9Q7tFzV6Fc">here</a> and ask us.
       </p>
 
       <h1>❓ Question unanswered?</h1>
@@ -61,7 +64,29 @@
         Don't worry! You can join our support server <a href="https://discord.gg/9Q7tFzV6Fc">here</a> for more help.
       </p>
     </div>
+
+    <div id="results">
+      <h1>Results:</h1>
+      <div id="results-list">
+      </div>
+    </div>
   </main>
+
+  <div id="info-popup">
+    <div id="info-header">
+      <span id="info-header-username">
+        .idea
+      </span>
+      <span id="info-popup-close" onclick="closeInfoPopup()">X</span>
+    </div>
+    <div id="info-content">
+      <span>User ID:</span> <span id="info-id"></span><br />
+      <span>Message context:</span>
+      <div id="info-message-context">
+
+      </div>
+    </div>
+  </div>
 
   <footer>
     <a href="https://github.com/c-128/DMFinder">Github</a>
@@ -72,9 +97,92 @@
 </body>
 
 <script>
+  class Result {
+
+    /**
+     * @param {User} user
+     * @param {Message[]} messages
+     */
+    constructor(user, messages) {
+      this.user = user;
+      this.messages = messages;
+    }
+  }
+
+  class Message {
+
+    /**
+     * @param {User} author
+     * @param {string} content
+     * @param {number} timestamp
+     */
+    constructor(author, content, timestamp) {
+      this.author = author;
+      this.content = content;
+      this.timestamp = timestamp;
+    }
+
+    containsWord() {
+      return this.content.includes(queryField.value);
+    }
+  }
+
+  class User {
+
+    /**
+     * @param {string} id
+     * @param {string} username
+     * @param {string[]} badges
+     * @param {Avatar} avatar
+     */
+    constructor(id, username, badges, avatar) {
+      this.id = id;
+      this.username = username;
+      this.badges = badges;
+      this.avatar = avatar;
+    }
+  }
+
+  class Avatar {
+
+    /**
+     * @param {string} id
+     * @param {string} link
+     */
+    constructor(id, link) {
+      this.id = id;
+      this.link = link;
+    }
+  }
+
   const fileField = document.getElementById("package-file");
   const queryField = document.getElementById("query");
   const searchButton = document.getElementById("search");
+
+  const faqDiv = document.getElementById("faq");
+  const resultsDiv = document.getElementById("results");
+  const resultsListDiv = document.getElementById("results-list");
+
+  const infoPopupDiv = document.getElementById("info-popup");
+  const infoPopupValues = {
+    headerUsername: document.getElementById("info-header-username"),
+    id: document.getElementById("info-id"),
+    messageContext: document.getElementById("info-message-context")
+  };
+
+  let results;
+  const usercahce = {};
+
+  const me = new User(
+    "00",
+    "example#1111",
+    [],
+    new Avatar(
+      "0336e9e0fac91b0f0b343e11ccf35466",
+      "https://cdn.discordapp.com/avatars/697237282087895042/0336e9e0fac91b0f0b343e11ccf35466"
+    )
+  );
+
 
   searchButton.onclick = () => {
     searchButton.classList.add("button-disabled");
@@ -83,9 +191,81 @@
     setTimeout(() => {
       searchButton.classList.remove("button-disabled");
       searchButton.innerHTML = "Search";
-
-    }, 2000);
+      results = [
+        new Result(
+          me,
+          [
+            new Message(me, "test", 0),
+            new Message(me, "test2", 30871835),
+            new Message(me, "test3", 308718358179)
+          ]
+        )
+      ];
+      showResults();
+    }, 1);
   };
+
+  function showFaq() {
+    faqDiv.style.display = "block";
+    resultsDiv.style.display = "none";
+  }
+
+  function showResults() {
+    faqDiv.style.display = "none";
+    resultsDiv.style.display = "block";
+
+    resultsListDiv.innerHTML = results.map((res, i) => {
+      return `<div id="result-item">
+        <img src="${res.user.avatar.link}" alt="Avatar" />
+        <span id="tag">${res.user.username}</span>
+        <a href="#" onclick="showMoreInfo(${i})">More Info</a>
+      </div>`;
+    });
+  }
+
+  /**
+   * @param {number} i
+   */
+  function showMoreInfo(i) {
+    const res = results[i];
+
+    infoPopupValues.headerUsername.innerHTML = res.user.username;
+    infoPopupValues.id.innerHTML = res.user.id;
+    infoPopupValues.messageContext.innerHTML = res.messages.sort((a, b) => a.timestamp - b.timestamp).map((message, i) => {
+      return `<div id="message">
+        <span>${message.author.username}: ${message.content}</span>
+      </div>`;
+    }).join("");
+
+    infoPopupDiv.style.display = "block";
+  }
+
+  function closeInfoPopup() {
+    infoPopupDiv.style.display = "none";
+  }
+
+  /**
+   * @param {string} userId
+   * @returns {User}
+   */
+  async function lookupUser(userId) {
+    if (usercahce[userId]) return userId[userId];
+
+    const res = await fetch("https://discordlookup.mesavirep.xyz/v1/" + userId);
+    const json = await res.json();
+
+    const user = new User(
+      userId,
+      json.tag,
+      json.badges,
+      new Avatar(
+        json.avatar.id,
+        json.avatar.link
+      )
+    );
+    usercahce[userId] = user;
+    return user;
+  }
 </script>
 
 </html>

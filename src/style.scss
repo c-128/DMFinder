@@ -98,10 +98,88 @@ header {
 
 main {
   margin: .3em;
+
+  #results {
+    #results-list {
+      #result-item {
+        display: flex;
+        align-content: center;
+        align-items: center;
+
+        img {
+          width: 2rem;
+          height: 2rem;
+          margin-right: 2%;
+        }
+
+        #tag {
+          width: 80%;
+          font-size: 1.5rem;
+        }
+
+        * { background: transparent; }
+      }
+
+      #result-item:hover {
+        background-color: darken($color: ($themeBackground), $amount: 2);
+      }
+    }
+  }
 }
 
 footer {
   position: absolute;
   bottom: .3em;
   left: .3em;
+}
+
+#info-popup {
+  position: fixed;
+  top: 10%;
+  width: 60%;
+  right: 20%;
+  height: 70%;
+  background-color: $themeBackgroundDark;
+  z-index: 9999999999;
+  display: none;
+
+  #info-header {
+    margin: 0px;
+    width: 99%;
+    background-color: darken($color: $themeBackgroundDark, $amount: 3);
+    padding: .5%;
+    display: flex;
+
+
+    #info-header-username {
+      font-size: 2em;
+      width: 97%;
+    }
+
+    #info-popup-close {
+      font-size: 2em;
+      cursor: pointer;
+    }
+
+    * { background: transparent; }
+  }
+
+  #info-content {
+    margin: .3em;
+    background: transparent;
+    * { background: transparent; }
+
+    #info-message-context {
+      height: 90%;
+      overflow-y: scroll;
+      display: flex;
+      flex-direction: column;
+      background-color: $themeInputField;
+      padding: 10px;
+
+      #message {
+        
+      }
+    }
+  }
 }
