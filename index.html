@@ -16,7 +16,8 @@
   <header>
     <div class="file">
       <input type="file" id="package-file" accept="application/zip" style="display: none;" />
-      <button class="button button-primary" onclick="document.getElementById('package-file').click()">Upload data package</button>
+      <button class="button button-primary" onclick="document.getElementById('package-file').click()">Upload data
+        package</button>
     </div>
 
     <div class="query">
@@ -43,6 +44,7 @@
         <li>
           You can now search for a keyword which you are sure you said it in the messaging channel.
           Once you entered it, press the search button. This may take a while.
+          If you want to list all DMs you had, leave the keyword blank.
         </li>
         <li>
           Now you should see all the users where you said that keyword.
@@ -55,7 +57,8 @@
         that no data will be sent to a server.
         You can even safe the site using your browser (Right click > Save Page as...) and then manually open it.
         Additionally you can also check the source code <a href="https://github.com/c-128/DMFinder">here</a>.
-        If you are still uncertain, feel free to join our support server <a href="https://discord.gg/9Q7tFzV6Fc">here</a> and
+        If you are still uncertain, feel free to join our support server <a
+          href="https://discord.gg/9Q7tFzV6Fc">here</a> and
         ask us.
       </p>
 
@@ -75,16 +78,14 @@
   <div id="info-popup">
     <div id="info-header">
       <span id="info-header-username">
-        .idea
+        More Info
       </span>
       <span id="info-popup-close" onclick="closeInfoPopup()">X</span>
     </div>
     <div id="info-content">
-      <span>User ID:</span> <span id="info-id"></span><br />
+      <span>User IDs:</span> <span id="info-id"></span><br />
       <span>Message context:</span>
-      <div id="info-message-context">
-
-      </div>
+      <div id="info-message-context"></div>
     </div>
   </div>
 
@@ -96,17 +97,27 @@
   <script type="module" src="/src/main.ts"></script>
 </body>
 
-<script src="/web-streams-polyfill.min.js"></script>
-<script src="/zip.min.js"></script>
+<script>
+  if (typeof TransformStream == "undefined") {
+    const script = document.createElement("script");
+    script.src = "/web-streams-polyfill.min.js";
+    document.body.appendChild(script);
+  }
+
+  const script = document.createElement("script");
+  script.src = "/zip.min.js";
+  document.body.appendChild(script);
+</script>
+
 <script>
   class Result {
 
     /**
-     * @param {User} user
+     * @param {User[]} users
      * @param {Message[]} messages
      */
-    constructor(user, messages) {
-      this.user = user;
+    constructor(users, messages) {
+      this.users = users;
       this.messages = messages;
     }
   }
@@ -168,7 +179,6 @@
 
   const infoPopupDiv = document.getElementById("info-popup");
   const infoPopupValues = {
-    headerUsername: document.getElementById("info-header-username"),
     id: document.getElementById("info-id"),
     messageContext: document.getElementById("info-message-context")
   };
@@ -210,18 +220,13 @@
   };
 
   async function getResults(query) {
-    const reader = (new zip.ZipReader(new zip.BlobReader(fileField.files[0])));
-
+    // TODO
     return [
       new Result(
-        me,
-        [
-          new Message(me, "test", 0),
-          new Message(me, "test2", 30871835),
-          new Message(me, "test3", 308718358179)
-        ]
+        [me, me],
+        []
       )
-    ]
+    ];
   }
 
   function showFaq() {
@@ -235,8 +240,12 @@
 
     resultsListDiv.innerHTML = results.map((res, i) => {
       return `<div id="result-item">
-        <img src="${res.user.avatar.link}" alt="Avatar" />
-        <span id="tag">${res.user.username}</span>
+        <div id="users">
+          ${res.users.map((user, i) => `
+            <img src="${user.avatar.link}" />
+            <span id="tag">${user.username}</span>
+          `).join("")}
+        </div>
         <a href="#" onclick="showMoreInfo(${i})">More Info</a>
       </div>`;
     });
@@ -248,8 +257,7 @@
   function showMoreInfo(i) {
     const res = results[i];
 
-    infoPopupValues.headerUsername.innerHTML = res.user.username;
-    infoPopupValues.id.innerHTML = res.user.id;
+    infoPopupValues.id.innerHTML = res.users.map((u) => u.id + " (" + u.username + ")").join(", ");
     infoPopupValues.messageContext.innerHTML = res.messages.sort((a, b) => a.timestamp - b.timestamp).map((message, i) => {
       return `<div id="message">
         <span>${message.author.username}: ${message.content}</span>
