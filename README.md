@@ -12,6 +12,8 @@ You can request it in the settings under the `Privacy & Safety` section. Once yo
 Firstly, once the website is loaded, it can be fully used with your internet connection turned off, ensuring that no data will be sent to a server. You can even safe the site using your browser (`Right click > Save Page as...`) and then manually open it. Additionally you can also check the source code. If you are still uncertain, feel free to join our support server [here](https://discord.gg/9Q7tFzV6Fc) and ask us.
 ### ❓ Question unanswered?
 Don't worry! You can join our support server [here](https://discord.gg/9Q7tFzV6Fc) for more help.
+### ✳️ I want to list all DMs, how do I do that?
+Just do not enter a keyword on the site (live demo [here](https://dmfinder.vercel.app/)), and you should see all the DMs that you opened.
 
 ## ✉️ Contact us!
 * [Discord](https://discord.gg/9Q7tFzV6Fc)

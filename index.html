@@ -44,7 +44,7 @@
         <li>
           You can now search for a keyword which you are sure you said it in the messaging channel.
           Once you entered it, press the search button. This may take a while.
-          If you want to list all DMs you had, leave the keyword blank.
+          If you want to list all DMs you opened, leave the keyword blank.
         </li>
         <li>
           Now you should see all the users where you said that keyword.
@@ -100,12 +100,12 @@
 <script>
   if (typeof TransformStream == "undefined") {
     const script = document.createElement("script");
-    script.src = "/web-streams-polyfill.min.js";
+    script.src = "/lib/web-streams-polyfill.min.js";
     document.body.appendChild(script);
   }
 
   const script = document.createElement("script");
-  script.src = "/zip.min.js";
+  script.src = "/lib/zip.min.js";
   document.body.appendChild(script);
 </script>
 
@@ -207,12 +207,7 @@
     searchButton.classList.add("button-disabled");
     searchButton.innerHTML = "Searching...";
 
-    if (resultsCache[queryField.value]) results = resultsCache[queryField.value];
-    else {
-      const res = await getResults(queryField.value);
-      resultsCache[queryField.value] = res;
-      results = res;
-    }
+    results = await getResults(queryField.value);
 
     searchButton.classList.remove("button-disabled");
     searchButton.innerHTML = "Search";
@@ -220,13 +215,17 @@
   };
 
   async function getResults(query) {
+    if (resultsCache[query]) return resultsCache[query];
     // TODO
-    return [
+
+    const res = [
       new Result(
         [me, me],
         []
       )
     ];
+    resultsCache[query] = res;
+    return res;
   }
 
   function showFaq() {
