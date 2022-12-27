@@ -171,6 +171,7 @@
   };
 
   let results;
+  const resultsCache = {};
   const usercahce = {};
 
   const me = new User(
@@ -191,7 +192,19 @@
     setTimeout(() => {
       searchButton.classList.remove("button-disabled");
       searchButton.innerHTML = "Search";
-      results = [
+
+      if (resultsCache[queryField.value]) results = resultsCache[queryField.value];
+      else {
+        const res = getResults(queryField.value);
+        resultsCache[queryField.value] = res;
+        results = res;
+      }
+      showResults();
+    }, 1);
+  };
+
+  function getResults(query) {
+    return [
         new Result(
           me,
           [
@@ -200,10 +213,8 @@
             new Message(me, "test3", 308718358179)
           ]
         )
-      ];
-      showResults();
-    }, 1);
-  };
+      ]
+  }
 
   function showFaq() {
     faqDiv.style.display = "block";
