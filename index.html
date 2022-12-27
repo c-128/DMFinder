@@ -15,7 +15,8 @@
 <body>
   <header>
     <div class="file">
-      <input type="file" id="package-file" />
+      <input type="file" id="package-file" accept="application/zip" style="display: none;" />
+      <button class="button button-primary" onclick="document.getElementById('package-file').click()">Upload data package</button>
     </div>
 
     <div class="query">
@@ -54,8 +55,7 @@
         that no data will be sent to a server.
         You can even safe the site using your browser (Right click > Save Page as...) and then manually open it.
         Additionally you can also check the source code <a href="https://github.com/c-128/DMFinder">here</a>.
-        If you are still uncertain, feel free to join our support server <a
-          href="https://discord.gg/9Q7tFzV6Fc">here</a> and
+        If you are still uncertain, feel free to join our support server <a href="https://discord.gg/9Q7tFzV6Fc">here</a> and
         ask us.
       </p>
 
@@ -96,6 +96,8 @@
   <script type="module" src="/src/main.ts"></script>
 </body>
 
+<script src="/web-streams-polyfill.min.js"></script>
+<script src="/zip.min.js"></script>
 <script>
   class Result {
 
@@ -155,6 +157,7 @@
     }
   }
 
+
   const fileField = document.getElementById("package-file");
   const queryField = document.getElementById("query");
   const searchButton = document.getElementById("search");
@@ -185,35 +188,40 @@
   );
 
 
-  searchButton.onclick = () => {
+  searchButton.onclick = async () => {
+    if (fileField.files.length == 0) {
+      alert("Please update your discord data package!");
+      return;
+    }
+
     searchButton.classList.add("button-disabled");
     searchButton.innerHTML = "Searching...";
 
-    setTimeout(() => {
-      searchButton.classList.remove("button-disabled");
-      searchButton.innerHTML = "Search";
+    if (resultsCache[queryField.value]) results = resultsCache[queryField.value];
+    else {
+      const res = await getResults(queryField.value);
+      resultsCache[queryField.value] = res;
+      results = res;
+    }
 
-      if (resultsCache[queryField.value]) results = resultsCache[queryField.value];
-      else {
-        const res = getResults(queryField.value);
-        resultsCache[queryField.value] = res;
-        results = res;
-      }
-      showResults();
-    }, 1);
+    searchButton.classList.remove("button-disabled");
+    searchButton.innerHTML = "Search";
+    showResults();
   };
 
-  function getResults(query) {
+  async function getResults(query) {
+    const reader = (new zip.ZipReader(new zip.BlobReader(fileField.files[0])));
+
     return [
-        new Result(
-          me,
-          [
-            new Message(me, "test", 0),
-            new Message(me, "test2", 30871835),
-            new Message(me, "test3", 308718358179)
-          ]
-        )
-      ]
+      new Result(
+        me,
+        [
+          new Message(me, "test", 0),
+          new Message(me, "test2", 30871835),
+          new Message(me, "test3", 308718358179)
+        ]
+      )
+    ]
   }
 
   function showFaq() {
