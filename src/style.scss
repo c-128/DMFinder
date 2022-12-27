@@ -59,6 +59,10 @@ $themButtonDisabled: hsl(216, 7.2%, 13.5%);
   background-color: $themButtonDisabled;
 }
 
+.button-transparent {
+  background: transparent;
+}
+
 .inputfield {
   font-size: 16px;
   border-radius: 3px;
